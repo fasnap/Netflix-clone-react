@@ -3,12 +3,12 @@ import "./RowPost.css";
 import axios from "../../axios";
 import { API_KEY, imageUrl } from "../../constants/constants";
 import YouTube from "react-youtube";
-function RowPost(props) {
+function RowPost({ url, title, isSmall }) {
   const [movies, setMovies] = useState([]);
   const [urlid, setUrlId] = useState("");
   useEffect(() => {
     axios
-      .get(props.url)
+      .get(url)
       .then((response) => {
         console.log(response.data);
         setMovies(response.data.results);
@@ -16,7 +16,7 @@ function RowPost(props) {
       .catch((err) => {
         alert("Network Error");
       });
-  }, []);
+  }, [url]);
   const opts = {
     height: "390",
     width: "100%",
@@ -39,14 +39,15 @@ function RowPost(props) {
   };
   return (
     <div className="row">
-      <h2>{props.title}</h2>
+      <h2>{title}</h2>
       <div className="posters">
         {movies.map((obj) => (
           <img
+          key={obj.id}
             onClick={() => handleMovie(obj.id)}
-            className={props.isSmall ? "smallPoster" : "poster"}
+            className={isSmall ? "smallPoster" : "poster"}
             src={`${imageUrl + obj.backdrop_path}`}
-            alt="poster"
+            alt={obj.title || obj.name}
           />
         ))}
       </div>
